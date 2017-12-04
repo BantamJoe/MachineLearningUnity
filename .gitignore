@@ -19,3 +19,9 @@
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+ML_UnityProject/Library/
+
+ML_UnityProject/UnityPackageManager/
+
+ML_UnityProject/obj/
