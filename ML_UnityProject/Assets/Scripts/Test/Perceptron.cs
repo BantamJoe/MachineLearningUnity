@@ -6,29 +6,62 @@ namespace test
 {
     public class Perceptron : MonoBehaviour
     {
+        public bool useSmallestError;
+
+        [Tooltip("Taux d'apprentissage")]
         public float a = 0.05f;
 
-        public BackgroundCreation background;
+        public BackgroundManager background;
         public ObjectManager objects;
 
-        private List<Transform> bg = new List<Transform>();
+        int n;
+        int p = 2;
+        float[,] input;
+        int[] outputReal;
+        int[] outputFound;
+        float[] weights;
 
-        public List<float> factors;
+        int smallestError;
+        float[] betterWeigts;
+
+        List<int> misclassed;
+
+        private void Init()
+        {
+            Entity[] entities = objects.GetComponentsInChildren<Entity>();
+
+            n = entities.Length;
+
+            input = new float[n, p];
+            outputReal = new int[n];
+            outputFound = new int[n];
+            weights = new float[p + 1];
+            betterWeigts = new float[p + 1];
+
+            Vector2 pos;
+            for (int i = 0; i < n; i++)
+            {
+                pos = entities[i].transform.position;
+                input[i, 0] = pos.x;
+                input[i, 1] = pos.y;
+                outputReal[i] = entities[i].State - 1;
+            }
+
+            weights[0] = Random.Range(-1f, 1f);
+            weights[1] = Random.Range(-1f, 1f);
+            weights[2] = Random.Range(-1f, 1f);
+            weights.CopyTo(betterWeigts, 0);
+
+            misclassed = new List<int>(n);
+        }
 
         private void Start()
         {
-            foreach (Transform child in background.transform)
-            {
-                bg.Add(child);
-            }
+            Init();
 
-            factors = new List<float>();
-            for (int i = 0; i < 3; i++)
-            {
-                factors.Add(Random.Range(-1f, 1f));
-            }
-
-            PaintBackground();
+            ComputeMisclassifiedList();
+            smallestError = misclassed.Count;
+            background.Paint(weights[0], weights[1], weights[2]);
         }
 
         private void Update()
@@ -39,46 +72,60 @@ namespace test
             }
         }
 
-        public void GetBetter()
+        private void ComputeMisclassifiedList()
         {
-            List<Entity> tmp = new List<Entity>(objects.entities);
-            
+            misclassed.Clear();
 
-
-            for (int i = tmp.Count - 1; i >= 0; i--)
+            for (int i = 0; i < n; i++)
             {
-                Transform t = tmp[Random.Range(0, i + 1)].transform;
-                float val = t.position.x * factors[0] +
-                    t.position.y * factors[1] +
-                    factors[2];
-                val = val > 0 ? 1 : 0;
+                float val = input[i, 0] * weights[0]
+                    + input[i, 1] * weights[1] + weights[2];
 
-                if (tmp[i].State == val)
+                outputFound[i] = val == 0 ? -1 : val > 0 ? 1 : 0;
+
+                if (outputFound[i] != outputReal[i])
                 {
-                    tmp.Remove(tmp[i]);
-                    continue;
-                }
-                else
-                {
-                    factors[0] += a * (t.GetComponent<Entity>().State - val) * t.position.x;
-                    factors[1] += a * (t.GetComponent<Entity>().State - val) * t.position.y;
-                    factors[2] += a * (t.GetComponent<Entity>().State - val);
-                    break;
+                    misclassed.Add(i);
                 }
             }
 
-            PaintBackground();
+            if (useSmallestError)
+            {
+                Debug.Log("Error = " + misclassed.Count + " (better = " + smallestError + ")");
+            }
+            else
+            {
+                Debug.Log("Error = " + misclassed.Count);
+            }
         }
 
-        private void PaintBackground()
+        public void GetBetter()
         {
-            foreach (Entity child in background.transform.GetComponentsInChildren<Entity>())
+            if (misclassed.Count <= 0)
             {
-                float val = child.transform.position.x * factors[0] +
-                    child.transform.position.y * factors[1] +
-                    factors[2];
+                return;
+            }
 
-                child.State = val > 0 ? 1 : 0;
+            int badOne = misclassed[Random.Range(0, misclassed.Count)];
+            float diff = outputReal[badOne] - outputFound[badOne];
+            weights[0] += a * input[badOne, 0] * diff;
+            weights[1] += a * input[badOne, 1] * diff;
+            weights[2] += a * diff;
+
+            ComputeMisclassifiedList();
+
+            if (useSmallestError)
+            {
+                if (misclassed.Count < smallestError)
+                {
+                    weights.CopyTo(betterWeigts, 0);
+                    smallestError = misclassed.Count;
+                }
+                background.Paint(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
+            }
+            else
+            {
+                background.Paint(weights[0], weights[1], weights[2]);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace test
             }
         }
 
-        private void Start()
+        private void Awake()
         {
             mat = GetComponent<MeshRenderer>().material;
             for (int i = 0; i < Consts.colors.Length; i++)
@@ -33,11 +33,6 @@ namespace test
                     break;
                 }
             }
-        }
-
-        private void SetColor(Color c)
-        {
-            mat.color = c;
         }
     }
 }
