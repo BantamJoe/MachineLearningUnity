@@ -6,10 +6,11 @@ namespace test
 {
     public class Perceptron : MonoBehaviour
     {
+        public bool auto;
         public bool useSmallestError;
 
         [Tooltip("Taux d'apprentissage")]
-        public float a = 0.05f;
+        public float a = 0.001f;
 
         public BackgroundManager background;
         public ObjectManager objects;
@@ -66,9 +67,14 @@ namespace test
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.LeftShift))
+            if (auto)
             {
                 GetBetter();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                auto = !auto;
             }
         }
 

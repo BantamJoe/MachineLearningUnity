@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33890813110189290}
   - component: {fileID: 23930192207934922}
   - component: {fileID: 114000851642687446}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Quad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,4 +94,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbb72729b7013e4b97537e9ea7172e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
