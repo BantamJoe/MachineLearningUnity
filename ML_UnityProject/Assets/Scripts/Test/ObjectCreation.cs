@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace test
+namespace MachineLearning.Test
 {
     public class ObjectCreation : MonoBehaviour
     {
@@ -22,13 +22,13 @@ namespace test
             Instance = this;
 
             Vector3 rd = Vector3.zero;
-            Entity ent;
+            MachineLearning.Scene.Entity ent;
 
             for (int i = 0; i < quantity; i++)
             {
                 rd.x = Random.Range(-area.x, area.x);
                 rd.y = Random.Range(-area.y, area.y);
-                ent = Instantiate(prefab, rd, Quaternion.identity, transform).GetComponent<Entity>();
+                ent = Instantiate(prefab, rd, Quaternion.identity, transform).GetComponent<MachineLearning.Scene.Entity>();
                 
                 ent.State = ent.transform.position.y > a * ent.transform.position.x + b ? 1 : 0;
             }

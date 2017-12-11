@@ -4,4 +4,25 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/main.unity
+    guid: f61cc809a7fc20348a528281d36296ce
+  - enabled: 1
+    path: Assets/Scenes/2D/ComplexLinear.unity
+    guid: 832cb3283f9d41d4db77369e5b9dd76c
+  - enabled: 1
+    path: Assets/Scenes/2D/ComplexNonLinear.unity
+    guid: bbaef03ad43b2054e859aa735e8d36b0
+  - enabled: 1
+    path: Assets/Scenes/2D/SimpleLinear.unity
+    guid: 97360d401e26ad244a5bb933663f5dcd
+  - enabled: 1
+    path: Assets/Scenes/2D/SimpleLinearBig.unity
+    guid: f367109eec43661458cd2087e6d9a828
+  - enabled: 1
+    path: Assets/Scenes/2D/SimpleNonLinear.unity
+    guid: 9e8aea9c2b2c41d4498f2887f41ecb2b
+  - enabled: 1
+    path: Assets/Scenes/2D/XOR.unity
+    guid: bf30365d084a28b4480b4df8fc6dbd25

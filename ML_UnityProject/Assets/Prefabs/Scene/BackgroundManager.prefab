@@ -19,9 +19,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4550238796509464}
-  - component: {fileID: 114059423099112536}
+  - component: {fileID: 114563963988675270}
   m_Layer: 0
-  m_Name: Background
+  m_Name: BackgroundManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114059423099112536
+--- !u!114 &114563963988675270
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -48,8 +48,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1037799458519396}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e07a1dea3e5d8147ba07d69aaaa5e20, type: 3}
+  m_Script: {fileID: 11500000, guid: 47df0c2b64be71d48a4846bad60544b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1082029265815770, guid: 641f949f66ffc024dac334054014b065, type: 2}
-  area: {x: 10, y: 10}
+  sizeX: 20
+  sizeY: 20
+  offset: {x: 0.5, y: 0.5, z: 0}
+  debugWeights:
+  - 1
+  - 1
+  - 0

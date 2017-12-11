@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace test
+namespace MachineLearning.Scene
 {
     public class Entity : MonoBehaviour
     {

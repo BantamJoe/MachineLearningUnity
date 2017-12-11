@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using MachineLearning.Scene;
 
-namespace test
+namespace MachineLearning.Algo
 {
+    /// <summary>
+    /// Un perceptron a deux couches a deux neurones en C#. 
+    /// </summary>
     public class DualLayerPerceptron : MonoBehaviour
     {
         public bool auto;
         public bool useSmallestError;
 
         [Tooltip("Taux d'apprentissage")]
-        public float a = 0.05f;
-
-        public BackgroundManager background;
-        public ObjectManager objects;
+        public float a = 0.001f;
 
         int n;
-        int p = 7;
         float[,] input;
         float[,] miPut;
         int[] outputReal;
@@ -34,10 +31,31 @@ namespace test
         float[] betterWeights;
 
         List<int> misclassed;
-        
+
+        public void RunPerceptron(int iterations)
+        {
+            if (smallestError <= 0)
+            {
+                LogManager.Log("Error is already 0.");
+                return;
+            }
+
+            Debug.Log("Running Perceptron.");
+
+            for (int i = 0; i < iterations; i++)
+            {
+                GetBetter();
+
+                if (smallestError <= 0 || i == iterations - 1)
+                {
+                    LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+                }
+            }
+        }
+
         private void Init()
         {
-            Entity[] entities = objects.GetComponentsInChildren<Entity>();
+            Entity[] entities = ObjectManager.Instance.GetComponentsInChildren<Entity>();
 
             n = entities.Length;
 
@@ -72,7 +90,7 @@ namespace test
 
             ComputeMisclassifiedList();
             smallestError = misclassed.Count;
-            background.Paint2Layer(weights);
+            BackgroundManager.Instance.Paint2Layer(weights);
         }
 
         private void Update()
@@ -86,15 +104,6 @@ namespace test
             {
                 auto = !auto;
             }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                DebugWeights();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                DebugMiPuts();
-            }
         }
 
         private void ComputeMisclassifiedList()
@@ -105,13 +114,13 @@ namespace test
             for (int i = 0; i < n; i++)
             {
                 val = input[i, 0] * weights[0] + input[i, 1] * weights[1] + weights[2];
-                miPut[i, 0] = (float)Math.Tanh(val);
+                miPut[i, 0] = Tanh(val);
                 val = input[i, 0] * weights[3] + input[i, 1] * weights[4] + weights[5];
-                miPut[i, 1] = (float)Math.Tanh(val);
+                miPut[i, 1] = Tanh(val);
                 
                 val = miPut[i, 0] * weights[6] + miPut[i, 1] * weights[7] + weights[8];
-                outputFound[i] = (float)Math.Tanh(val);
-                //outputFound[i] = Math.Sign(val);
+                outputFound[i] = Tanh(val);
+                //outputFound[i] = Sign(val);
 
                 if (outputFound[i] > 0 && outputReal[i] < 0
                     || outputFound[i] < 0 && outputReal[i] > 0)
@@ -137,8 +146,7 @@ namespace test
                 return;
             }
 
-            int badOne = misclassed[UnityEngine.Random.Range(0, misclassed.Count)];
-            float diff = outputReal[badOne] - outputFound[badOne];
+            int badOne = misclassed[Random.Range(0, misclassed.Count)];
 
             //// Retropropagation :
 
@@ -193,40 +201,23 @@ namespace test
                 {
                     betterWeights = weights.Clone() as float[];
                     smallestError = misclassed.Count;
-                    background.Paint2Layer(betterWeights);
+                    BackgroundManager.Instance.Paint2Layer(betterWeights);
 
                 }
             }
             else
             {
-                background.Paint2Layer(weights);
+                BackgroundManager.Instance.Paint2Layer(weights);
             }
         }
 
-        private void DebugWeights()
+        private float Tanh(float val)
         {
-            //StringBuilder sb = new StringBuilder();
-            //for (int i = 0; i < weights.GetLength(1); i++)
-            //{
-            //    for (int j = 0; j < weights.GetLength(2); j++)
-            //    {
-            //        sb.Append(weights[0, i, j]);
-            //        sb.Append(" ; ");
-            //    }
-            //    sb.AppendLine();
-            //}
-            //Debug.Log(sb);
+            return (float)System.Math.Tanh(val);
         }
-
-        private void DebugMiPuts()
+        private int Sign(float val)
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < miPut.GetLength(0); i++)
-            {
-                sb.Append("(" + miPut[i, 0] + ";" + miPut[i, 1] + ")");
-                sb.Append(" ; ");
-            }
-            Debug.Log(sb);
+            return System.Math.Sign(val);
         }
     }
 }

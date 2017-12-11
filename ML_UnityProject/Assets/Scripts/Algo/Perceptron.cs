@@ -1,9 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using MachineLearning.Scene;
 
-namespace test
+namespace MachineLearning.Algo
 {
+    /// <summary>
+    /// Perceptron simple couche en C#.
+    /// </summary>
     public class Perceptron : MonoBehaviour
     {
         public bool auto;
@@ -11,9 +14,6 @@ namespace test
 
         [Tooltip("Taux d'apprentissage")]
         public float a = 0.001f;
-
-        public BackgroundManager background;
-        public ObjectManager objects;
 
         int n;
         int p = 2;
@@ -29,7 +29,7 @@ namespace test
 
         private void Init()
         {
-            Entity[] entities = objects.GetComponentsInChildren<Entity>();
+            Entity[] entities = ObjectManager.Instance.GetComponentsInChildren<Entity>();
 
             n = entities.Length;
 
@@ -62,7 +62,29 @@ namespace test
 
             ComputeMisclassifiedList();
             smallestError = misclassed.Count;
-            background.Paint(weights[0], weights[1], weights[2]);
+            BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
+        }
+
+        public void RunPerceptron(int iterations)
+        {
+            if (smallestError <= 0)
+            {
+                LogManager.Log("Error is already 0.");
+                return;
+            }
+
+            Debug.Log("Running Perceptron.");
+
+            int i = 0;
+            for (; i < iterations; i++)
+            {
+                GetBetter();
+
+                if (smallestError <= 0)
+                    break;
+            }
+            
+            LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
         }
 
         private void Update()
@@ -127,11 +149,11 @@ namespace test
                     weights.CopyTo(betterWeigts, 0);
                     smallestError = misclassed.Count;
                 }
-                background.Paint(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
+                BackgroundManager.Instance.Paint(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
             }
             else
             {
-                background.Paint(weights[0], weights[1], weights[2]);
+                BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
             }
         }
     }

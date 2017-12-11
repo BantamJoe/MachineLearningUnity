@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace test
+namespace MachineLearning.Scene
 {
     public class Consts
     {

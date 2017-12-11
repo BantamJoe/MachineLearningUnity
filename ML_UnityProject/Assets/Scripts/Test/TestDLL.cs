@@ -1,15 +1,18 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class TestDLL : MonoBehaviour
+namespace MachineLearning.Test
 {
-    [DllImport("machineLearning", EntryPoint = "TestSort")]
-    public static extern void TestSort(int[] a, int length);
-
-    public int[] a;
-
-    void Start()
+    public class TestDLL : MonoBehaviour
     {
-        TestSort(a, a.Length);
+        [DllImport("machineLearning", EntryPoint = "TestSort")]
+        public static extern void TestSort(int[] a, int length);
+
+        public int[] a;
+
+        void Start()
+        {
+            TestSort(a, a.Length);
+        }
     }
 }

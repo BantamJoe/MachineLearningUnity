@@ -1,10 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-namespace test
+namespace MachineLearning.Scene
 {
     public class BackgroundManager : MonoBehaviour
     {
+        public static BackgroundManager Instance;
+
+        public delegate float GetOutPutDelegate(float[] input);
+        public GetOutPutDelegate GetOutputFunc;
+
         public GameObject prefab;
         public int sizeX;
         public int sizeY;
@@ -17,6 +22,8 @@ namespace test
 
         void Awake()
         {
+            BackgroundManager.Instance = this;
+
             Vector3 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
             Vector3 pos = startPos + offset;
             Vector3 limit = pos + new Vector3(sizeX, sizeY);
@@ -29,6 +36,8 @@ namespace test
             }
 
             bgElements = GetComponentsInChildren<Entity>();
+
+            Debug.Log("BackgroundManager is awoken.");
         }
 
         public void Paint(float wx, float wy, float b)
@@ -78,6 +87,29 @@ namespace test
                     int result = Math.Sign(sum);
                     
                     current.State = result >= 0 ? 1 : 2;
+
+                    ++pos.x;
+                }
+                ++pos.y;
+            }
+        }
+
+        public void PaintYourself()
+        {
+            Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
+            Vector2 pos = startPos + (Vector2)offset;
+
+            Entity current;
+            float output;
+
+            for (int y = 0; y < sizeY; ++y)
+            {
+                pos.x = startPos.x + offset.x;
+                for (int x = 0; x < sizeX; ++x)
+                {
+                    current = bgElements[y * (sizeX) + x];
+                    output = GetOutputFunc(new float[] { pos.x, pos.y });
+                    current.State = output == 0 ? 0 : output > 0 ? 2 : 1;
 
                     ++pos.x;
                 }
