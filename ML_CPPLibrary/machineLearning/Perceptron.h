@@ -28,7 +28,7 @@ namespace MachineLearning
 
             SimplePerceptron() {}
 
-            float CalculateOutput(const int& index);
+            float CalculateOutput(const int& index, bool useBest = false);
             void CalculateGlobalError();
             void ImproveWeights();
 
@@ -42,7 +42,7 @@ namespace MachineLearning
             void Init();
 
             int Run(int iterations);
-            float CalculateOutput(float input[]);
+            float CalculateOutput(float input[], bool useBest = false);
 
             Eigen::MatrixXf getWeights() { return wbest; }
             int getError() { return ebest; }

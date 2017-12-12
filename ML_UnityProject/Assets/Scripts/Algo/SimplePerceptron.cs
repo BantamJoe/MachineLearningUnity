@@ -19,19 +19,24 @@ namespace MachineLearning.Algo
         [DllImport("machineLearning", EntryPoint = "Run")]
         public static extern int Run(int iterations);
         [DllImport("machineLearning", EntryPoint = "GetOutput")]
-        public static extern float GetOutput(float[] input);
+        public static extern float GetOutput(float[] input, bool useBest);
         #endregion DllImport
 
         public float a = 0.001f;
+        bool isCreated = false;
 
         private void Start()
         {
             Init();
+            isCreated = true;
         }
-
-        private void OnDisable()
+        
+        private void OnDestroy()
         {
-            DestroyPerceptron();
+            if (isCreated)
+            {
+                DestroyPerceptron();
+            }
         }
 
         private void Init()
@@ -46,9 +51,9 @@ namespace MachineLearning.Algo
             for (int i = 0; i < n; i++)
             {
                 pos = entities[i].transform.position;
-                input[i * 2] = pos.x;
-                input[i * 2 + 1] = pos.y;
-                output[i] = entities[i].State - 1;
+                input[i] = pos.x;
+                input[i + n] = pos.y;
+                output[i] = entities[i].State == 2 ? 1 : -1;
             }
             
             CreatePerceptron(a, n, 2);
@@ -59,11 +64,12 @@ namespace MachineLearning.Algo
             PaintBackground();
         }
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             int errors = Run(iterations);
             LogManager.Log("Running " + iterations + " iterations. Errors = " + errors);
             PaintBackground();
+            return errors;
         }
 
         private void PaintBackground()

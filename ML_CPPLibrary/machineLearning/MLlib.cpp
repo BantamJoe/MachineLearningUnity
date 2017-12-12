@@ -31,8 +31,8 @@ extern "C"
         return sp->Run(iterations);
     }
 
-    float MLlib_API __stdcall GetOutput(float input[])
+    float MLlib_API __stdcall GetOutput(float input[], bool useBest)
     {
-        return sp->CalculateOutput(input);
+        return sp->CalculateOutput(input, useBest);
     }
 }

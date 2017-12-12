@@ -19,7 +19,7 @@ namespace MachineLearning.Algo
         int p = 2;
         float[,] input;
         int[] outputReal;
-        int[] outputFound;
+        float[] outputFound;
         float[] weights;
 
         int smallestError;
@@ -35,7 +35,7 @@ namespace MachineLearning.Algo
 
             input = new float[n, p];
             outputReal = new int[n];
-            outputFound = new int[n];
+            outputFound = new float[n];
             weights = new float[p + 1];
             betterWeigts = new float[p + 1];
 
@@ -45,7 +45,7 @@ namespace MachineLearning.Algo
                 pos = entities[i].transform.position;
                 input[i, 0] = pos.x;
                 input[i, 1] = pos.y;
-                outputReal[i] = entities[i].State - 1;
+                outputReal[i] = entities[i].State == 2 ? 1 : -1;
             }
 
             weights[0] = Random.Range(-1f, 1f);
@@ -65,12 +65,12 @@ namespace MachineLearning.Algo
             BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
         }
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             if (smallestError <= 0)
             {
                 LogManager.Log("Error is already 0.");
-                return;
+                return 0;
             }
 
             Debug.Log("Running Perceptron.");
@@ -85,6 +85,7 @@ namespace MachineLearning.Algo
             }
             
             LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+            return smallestError;
         }
 
         private void Update()
@@ -109,9 +110,15 @@ namespace MachineLearning.Algo
                 float val = input[i, 0] * weights[0]
                     + input[i, 1] * weights[1] + weights[2];
 
-                outputFound[i] = val == 0 ? -1 : val > 0 ? 1 : 0;
+                //outputFound[i] = val == 0 ? -1 : val > 0 ? 1 : 0;
+                outputFound[i] = (float)System.Math.Tanh(val);
 
-                if (outputFound[i] != outputReal[i])
+                //if (outputFound[i] != outputReal[i])
+                //{
+                //    misclassed.Add(i);
+                //}
+                if (outputFound[i] >= 0 && outputReal[i] <= 0 
+                    || outputFound[i] <= 0 && outputReal[i] >= 0)
                 {
                     misclassed.Add(i);
                 }
@@ -144,7 +151,7 @@ namespace MachineLearning.Algo
 
             if (useSmallestError)
             {
-                if (misclassed.Count < smallestError)
+                if (misclassed.Count <= smallestError)
                 {
                     weights.CopyTo(betterWeigts, 0);
                     smallestError = misclassed.Count;

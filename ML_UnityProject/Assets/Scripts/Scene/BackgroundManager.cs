@@ -7,16 +7,13 @@ namespace MachineLearning.Scene
     {
         public static BackgroundManager Instance;
 
-        public delegate float GetOutPutDelegate(float[] input);
+        public delegate float GetOutPutDelegate(float[] input, bool useBest);
         public GetOutPutDelegate GetOutputFunc;
 
         public GameObject prefab;
         public int sizeX;
         public int sizeY;
         public Vector3 offset;
-
-        [Header("Press 'A' to use debug weights.")]
-        public float[] debugWeights = { 1, 1, 0 };
 
         private Entity[] bgElements;
 
@@ -94,6 +91,48 @@ namespace MachineLearning.Scene
             }
         }
 
+        public void PaintMulticlass(float[,] weights)
+        {
+            Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
+            Vector2 pos = startPos + (Vector2)offset;
+
+            Entity current;
+            float sum;
+
+            for (int y = 0; y < sizeY; ++y)
+            {
+                pos.x = startPos.x + offset.x;
+                for (int x = 0; x < sizeX; ++x)
+                {
+                    current = bgElements[y * (sizeX) + x];
+
+                    float[] outputs = new float[weights.GetLength(1)];
+                    for (int d = 0; d < outputs.Length; d++)
+                    {
+                        sum = pos.x * weights[0, d] + pos.y * weights[1, d] + weights[2, d];
+                        outputs[d] = (float)Math.Tanh(sum);
+                    }
+                    
+                    current.State = 0;
+                    float max = -1000;
+                    int maxID = 0;
+                    for (int d = 0; d < outputs.Length; d++)
+                    {
+                        if (outputs[d] > max)
+                        {
+                            max = outputs[d];
+                            maxID = d + 1;
+                        }
+                    }
+                    
+                    current.State = maxID;
+
+                    ++pos.x;
+                }
+                ++pos.y;
+            }
+        }
+
         public void PaintYourself()
         {
             Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
@@ -102,13 +141,17 @@ namespace MachineLearning.Scene
             Entity current;
             float output;
 
+            float[] p = new float[2];
+
             for (int y = 0; y < sizeY; ++y)
             {
                 pos.x = startPos.x + offset.x;
+                p[1] = pos.y;
                 for (int x = 0; x < sizeX; ++x)
                 {
+                    p[0] = pos.x;
                     current = bgElements[y * (sizeX) + x];
-                    output = GetOutputFunc(new float[] { pos.x, pos.y });
+                    output = GetOutputFunc(p, true);
                     current.State = output == 0 ? 0 : output > 0 ? 2 : 1;
 
                     ++pos.x;
@@ -146,14 +189,6 @@ namespace MachineLearning.Scene
                     ++pos.x;
                 }
                 ++pos.y;
-            }
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Paint(debugWeights[0], debugWeights[1], debugWeights[2]);
             }
         }
     }

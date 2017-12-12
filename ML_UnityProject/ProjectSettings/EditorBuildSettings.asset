@@ -26,3 +26,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/2D/XOR.unity
     guid: bf30365d084a28b4480b4df8fc6dbd25
+  - enabled: 1
+    path: Assets/Scenes/2D/Cross.unity
+    guid: f0789d0a8b7039c4080150ee651eac8c
+  - enabled: 1
+    path: Assets/Scenes/3D/SimpleLinear3D.unity
+    guid: 058c8d1f8ac96104c9e6d8da3449d530
+  - enabled: 1
+    path: Assets/Scenes/3D/SimpleLinear4D.unity
+    guid: 7a87f34775162e44baae006696dea9f2

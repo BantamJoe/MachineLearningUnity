@@ -32,25 +32,29 @@ namespace MachineLearning.Algo
 
         List<int> misclassed;
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             if (smallestError <= 0)
             {
                 LogManager.Log("Error is already 0.");
-                return;
+                return 0;
             }
 
             Debug.Log("Running Perceptron.");
 
-            for (int i = 0; i < iterations; i++)
+            int i = 0;
+            for (; i < iterations; i++)
             {
                 GetBetter();
 
-                if (smallestError <= 0 || i == iterations - 1)
+                if (smallestError <= 0)
                 {
-                    LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+                    break;
                 }
             }
+
+            LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+            return smallestError;
         }
 
         private void Init()
@@ -153,8 +157,8 @@ namespace MachineLearning.Algo
             // Last Layer
             float gradf = (1 - outputFound[badOne] * outputFound[badOne]) * (outputFound[badOne] - outputReal[badOne]);
 
-            float grad0 = (1 - miPut[badOne, 0] * miPut[badOne, 0]) * (weights[6]);
-            float grad1 = (1 - miPut[badOne, 1] * miPut[badOne, 1]) * (weights[7]);
+            float grad0 = (1 - miPut[badOne, 0] * miPut[badOne, 0]) * (weights[6]) * gradf;
+            float grad1 = (1 - miPut[badOne, 1] * miPut[badOne, 1]) * (weights[7]) * gradf;
 
             weights[0] -= a * input[badOne, 0] * grad0;
             weights[1] -= a * input[badOne, 1] * grad0;
@@ -197,7 +201,7 @@ namespace MachineLearning.Algo
 
             if (useSmallestError)
             {
-                if (misclassed.Count < smallestError)
+                if (misclassed.Count <= smallestError)
                 {
                     betterWeights = weights.Clone() as float[];
                     smallestError = misclassed.Count;

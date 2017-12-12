@@ -10,7 +10,8 @@ namespace MachineLearning.Scene
             Color.white,
             Color.red,
             Color.blue,
-            Color.red
+            Color.green,
+            Color.magenta
         };
     }
 }

@@ -6,15 +6,15 @@ namespace PerceptronTest
 
     void SimplePerceptronTest()
     {
-        sp = new SimplePerceptron(0.01f, 2, 1);
+        sp = new SimplePerceptron(0.01f, 5, 2);
         
         std::cout << "Perceptron created." << std::endl;
 
-        float input[]{ 1, 2, 3, 4, 5 };
+        float input[]{ 1, 2, 3, 4, 5, 1, 2 ,3, 4, 5 };
         float output[]{ 1, 1, 1, -1, -1 };
 
-        std::cout << "Input: " << "1, 2, 3, 4, 5" << std::endl;
-        std::cout << "Output: " << "1, 1, 1, -1, -1" << std::endl;
+        std::cout << "Input: " << "(1,1) (2,2) (3,3) (4,4) (5,5)" << std::endl;
+        std::cout << "Output: " << "  1,    1,    1,   -1,   -1" << std::endl;
 
         sp->FillData(input, output);
         sp->Init();
@@ -47,21 +47,29 @@ namespace PerceptronTest
             return;
         }
 
-        CreatePerceptron(0.01f, 2, 1);
+        CreatePerceptron(0.01f, 5, 2);
         std::cout << "Perceptron created." << std::endl;
 
-        float input[]{ 1, 2, 3, 4, 5 };
+        float input[]{ 1, 2, 3, 4, 5, 1, 2 ,3, 4, 5 };
         float output[]{ 1, 1, 1, -1, -1 };
 
-        std::cout << "Input: " << "1, 2, 3, 4, 5" << std::endl;
-        std::cout << "Output: " << "1, 1, 1, -1, -1" << std::endl;
+        std::cout << "Input: " << "(1,1) (2,2) (3,3) (4,4) (5,5)" << std::endl;
+        std::cout << "Output: " << "  1,    1,    1,   -1,   -1" << std::endl;
 
         FillData(input, output);
 
-        std::cout << std::endl << "Output for 1 is " << GetOutput(new float[1] {1}) << std::endl;
-        std::cout << "Running 1000 times" << std::endl;
-        Run(1000);
-        std::cout << "Output for 1 is " << GetOutput(new float[1] {1}) << std::endl;
+        std::cout << std::endl << "Output for 1 is " << GetOutput(new float[2]{ 1,1 }) << std::endl;
+        std::cout << "Output for 2 is " << GetOutput(new float[2]{ 2,2 }) << std::endl;
+        std::cout << "Output for 3 is " << GetOutput(new float[2]{ 3,3 }) << std::endl;
+        std::cout << "Output for 4 is " << GetOutput(new float[2]{ 4,4 }) << std::endl;
+        std::cout << "Output for 5 is " << GetOutput(new float[2]{ 5,5 }) << std::endl;
+        std::cout << "Running 10000 times" << std::endl;
+        Run(10000);
+        std::cout << "Output for 1 is " << GetOutput(new float[2]{ 1,1 }) << std::endl;
+        std::cout << "Output for 2 is " << GetOutput(new float[2]{ 2,2 }) << std::endl;
+        std::cout << "Output for 3 is " << GetOutput(new float[2]{ 3,3 }) << std::endl;
+        std::cout << "Output for 4 is " << GetOutput(new float[2]{ 4,4 }) << std::endl;
+        std::cout << "Output for 5 is " << GetOutput(new float[2]{ 5,5 }) << std::endl;
 
         DestroyPerceptron();
         std::cout << std::endl << "Perceptron deleted." << std::endl;
