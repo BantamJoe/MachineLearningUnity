@@ -1,18 +1,25 @@
 #include "Perceptron.h"
 #include <random>
+#include <iostream>
 
 namespace MachineLearning 
 {
     namespace Perceptron 
     {
-        float SimplePerceptron::CalculateOutput(const int & index)
+        float SimplePerceptron::CalculateOutput(const int & index, bool useBest)
         {
             float sum = 0;
-            for (size_t i = 0; i < din; i++)
+            for (size_t d = 0; d < din; d++)
             {
-                sum += in(index, i) * w(i);
+                if (useBest)
+                    sum += in(index, d) * wbest(d);
+                else
+                    sum += in(index, d) * w(d);
             }
-            sum += w(din); // biais
+            if (useBest)
+                sum += wbest(din);
+            else
+                sum += w(din); // biais
 
             return tanh(sum);
         }
@@ -34,14 +41,20 @@ namespace MachineLearning
             return ebest;
         }
 
-        float SimplePerceptron::CalculateOutput(float input[])
+        float SimplePerceptron::CalculateOutput(float input[], bool useBest)
         {
             float sum = 0;
-            for (size_t i = 0; i < din; i++)
+            for (size_t d = 0; d < din; d++)
             {
-                sum += input[i] * w(i);
+                if (useBest)
+                    sum += input[d] * wbest(d);
+                else
+                    sum += input[d] * w(d);
             }
-            sum += w(din); // biais
+            if (useBest)
+                sum += wbest(din);
+            else
+                sum += w(din); // biais
 
             return tanh(sum);
         }
@@ -75,9 +88,9 @@ namespace MachineLearning
 
             int badOne = mc[rand() % e];
             float diff = t(badOne) - y(badOne);
-            for (size_t i = 0; i < din; i++)
+            for (size_t d = 0; d < din; d++)
             {
-                w(i) += a * in(badOne, i) * diff;
+                w(d) += a * in(badOne, d) * diff;
             }
             w(din) += a * diff;
         }
@@ -103,7 +116,9 @@ namespace MachineLearning
         {
             in = Eigen::Map<Eigen::MatrixXf>(input, n, din);
             t = Eigen::Map<Eigen::VectorXf>(output, n);
-        }
+
+            std::cout << "Input matrix : " << in << std::endl;
+        } 
 
         void SimplePerceptron::FillData(Eigen::MatrixXf input, Eigen::MatrixXf output)
         {
