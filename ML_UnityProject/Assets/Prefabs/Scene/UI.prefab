@@ -1061,6 +1061,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: One layer perceptron C++
       m_Image: {fileID: 0}
+    - m_Text: Multiclass perceptron C#
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

@@ -9,6 +9,7 @@ namespace MachineLearning.Scene
         Perceptron p;
         DualLayerPerceptron dlp;
         SimplePerceptron sp;
+        MulticlassPerceptron dop;
 
         Toggle runToggle;
 
@@ -28,6 +29,7 @@ namespace MachineLearning.Scene
             p = go.GetComponent<Perceptron>();
             dlp = go.GetComponent<DualLayerPerceptron>();
             sp = go.GetComponent<SimplePerceptron>();
+            dop = go.GetComponent<MulticlassPerceptron>();
 
             runToggle = GetComponentInChildren<Toggle>();
         }
@@ -37,6 +39,7 @@ namespace MachineLearning.Scene
             p.enabled = value == 0 ? true : false;
             dlp.enabled = value == 1 ? true : false;
             sp.enabled = value == 2 ? true : false;
+            dop.enabled = value == 3 ? true : false;
         }
 
         void Update()
@@ -74,6 +77,10 @@ namespace MachineLearning.Scene
             else if (sp.enabled)
             {
                 return sp.RunPerceptron(iteration);
+            }
+            else if (dop.enabled)
+            {
+                return dop.RunPerceptron(iteration);
             }
 
             return 0;

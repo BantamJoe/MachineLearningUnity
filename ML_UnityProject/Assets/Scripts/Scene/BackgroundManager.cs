@@ -94,6 +94,51 @@ namespace MachineLearning.Scene
             }
         }
 
+        public void PaintMultiClasses(float[,] weights)
+        {
+            Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
+            Vector2 pos = startPos + (Vector2)offset;
+
+            Entity current;
+            float sum;
+
+            for (int y = 0; y < sizeY; ++y)
+            {
+                pos.x = startPos.x + offset.x;
+                for (int x = 0; x < sizeX; ++x)
+                {
+                    current = bgElements[y * (sizeX) + x];
+
+                    sum = pos.x * weights[0, 0] + pos.y * weights[1, 0] + weights[2, 0];
+                    float y1 = (float)Math.Tanh(sum);
+                    sum = pos.x * weights[0, 1] + pos.y * weights[1, 1] + weights[2, 1];
+                    float y2 = (float)Math.Tanh(sum);
+                    sum = pos.x * weights[0, 2] + pos.y * weights[1, 2] + weights[2, 2];
+                    float y3 = (float)Math.Tanh(sum);
+                    
+                    // Old method : everything not full-one-colored is white. 
+                    //current.State = 0;
+                    //if (y1 > 0 && y2 < 0 && y3 < 0)
+                    //    current.State = 1;
+                    //else if (y1 < 0 && y2 > 0 && y3 < 0)
+                    //    current.State = 2;
+                    //else if (y1 < 0 && y2 < 0 && y3 > 0)
+                    //    current.State = 3;
+
+                    current.State = 0;
+                    if (y1 > y2 && y1 > y3)
+                        current.State = 1;
+                    else if (y2 > y1 && y2 > y3)
+                        current.State = 2;
+                    else if (y3 > y1 && y3 > y2)
+                        current.State = 3;
+
+                    ++pos.x;
+                }
+                ++pos.y;
+            }
+        }
+
         public void PaintYourself()
         {
             Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
