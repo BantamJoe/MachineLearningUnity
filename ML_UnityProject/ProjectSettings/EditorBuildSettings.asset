@@ -32,3 +32,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/3D/SimpleLinear3D.unity
     guid: 058c8d1f8ac96104c9e6d8da3449d530
+  - enabled: 1
+    path: Assets/Scenes/3D/SimpleLinear4D.unity
+    guid: 7a87f34775162e44baae006696dea9f2

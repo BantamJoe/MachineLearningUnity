@@ -15,9 +15,6 @@ namespace MachineLearning.Scene
         public int sizeY;
         public Vector3 offset;
 
-        [Header("Press 'A' to use debug weights.")]
-        public float[] debugWeights = { 1, 1, 0 };
-
         private Entity[] bgElements;
 
         void Awake()
@@ -94,7 +91,7 @@ namespace MachineLearning.Scene
             }
         }
 
-        public void PaintMultiClasses(float[,] weights)
+        public void PaintMulticlass(float[,] weights)
         {
             Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
             Vector2 pos = startPos + (Vector2)offset;
@@ -109,29 +106,26 @@ namespace MachineLearning.Scene
                 {
                     current = bgElements[y * (sizeX) + x];
 
-                    sum = pos.x * weights[0, 0] + pos.y * weights[1, 0] + weights[2, 0];
-                    float y1 = (float)Math.Tanh(sum);
-                    sum = pos.x * weights[0, 1] + pos.y * weights[1, 1] + weights[2, 1];
-                    float y2 = (float)Math.Tanh(sum);
-                    sum = pos.x * weights[0, 2] + pos.y * weights[1, 2] + weights[2, 2];
-                    float y3 = (float)Math.Tanh(sum);
+                    float[] outputs = new float[weights.GetLength(1)];
+                    for (int d = 0; d < outputs.Length; d++)
+                    {
+                        sum = pos.x * weights[0, d] + pos.y * weights[1, d] + weights[2, d];
+                        outputs[d] = (float)Math.Tanh(sum);
+                    }
                     
-                    // Old method : everything not full-one-colored is white. 
-                    //current.State = 0;
-                    //if (y1 > 0 && y2 < 0 && y3 < 0)
-                    //    current.State = 1;
-                    //else if (y1 < 0 && y2 > 0 && y3 < 0)
-                    //    current.State = 2;
-                    //else if (y1 < 0 && y2 < 0 && y3 > 0)
-                    //    current.State = 3;
-
                     current.State = 0;
-                    if (y1 > y2 && y1 > y3)
-                        current.State = 1;
-                    else if (y2 > y1 && y2 > y3)
-                        current.State = 2;
-                    else if (y3 > y1 && y3 > y2)
-                        current.State = 3;
+                    float max = -1000;
+                    int maxID = 0;
+                    for (int d = 0; d < outputs.Length; d++)
+                    {
+                        if (outputs[d] > max)
+                        {
+                            max = outputs[d];
+                            maxID = d + 1;
+                        }
+                    }
+                    
+                    current.State = maxID;
 
                     ++pos.x;
                 }
@@ -195,14 +189,6 @@ namespace MachineLearning.Scene
                     ++pos.x;
                 }
                 ++pos.y;
-            }
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Paint(debugWeights[0], debugWeights[1], debugWeights[2]);
             }
         }
     }

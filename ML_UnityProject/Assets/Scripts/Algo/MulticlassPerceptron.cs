@@ -16,6 +16,7 @@ namespace MachineLearning.Algo
         public float a = 0.001f;
 
         int n;
+        int c; // classes
         float[,] input;
         int[,] outputReal;
         float[,] outputFound;
@@ -58,45 +59,37 @@ namespace MachineLearning.Algo
             n = entities.Length;
 
             input = new float[n, 2];
-            outputReal = new int[n, 3];
-            outputFound = new float[n, 3];
-            weights = new float[3, 3];
-            betterWeights = new float[3, 3];
+            
+            for (int i = 0; i < n; i++)
+            {
+                c = Mathf.Max(c, entities[i].State);
+            }
+            Debug.Log("There are " + c + " classes");
+            outputReal = new int[n, c];
+            outputFound = new float[n, c];
+            weights = new float[3, c];
+            betterWeights = new float[3, c];
 
             Vector2 pos;
             for (int i = 0; i < n; i++)
             {
+                int entityState = entities[i].State;
                 pos = entities[i].transform.position;
                 input[i, 0] = pos.x;
                 input[i, 1] = pos.y;
-                int entityState = entities[i].State;
-                switch (entityState)
+
+                for (int d = 0; d < c; d++)
                 {
-                case 1: // B
-                    outputReal[i, 0] = 1;
-                    outputReal[i, 1] = -1;
-                    outputReal[i, 2] = -1;
-                    break;
-                case 2: // R
-                    outputReal[i, 0] = -1;
-                    outputReal[i, 1] = 1;
-                    outputReal[i, 2] = -1;
-                    break;
-                case 3: // G
-                    outputReal[i, 0] = -1;
-                    outputReal[i, 1] = -1;
-                    outputReal[i, 2] = 1;
-                    break;
-                default:
-                    break;
+                    outputReal[i, d] = d == entityState - 1 ? 1 : -1;
                 }
             }
 
             for (int i = 0; i < weights.GetLength(0); i++)
             {
-                weights[i, 0] = Random.Range(-0.5f, 0.5f);
-                weights[i, 1] = Random.Range(-0.5f, 0.5f);
-                weights[i, 2] = Random.Range(-0.5f, 0.5f);
+                for (int j = 0; j < weights.GetLength(1); j++)
+                {
+                    weights[i, j] = Random.Range(-0.5f, 0.5f);
+                }
             }
             betterWeights = weights.Clone() as float[,];
 
@@ -109,7 +102,7 @@ namespace MachineLearning.Algo
 
             ComputeMisclassifiedList();
             smallestError = misclassed.Count;
-            BackgroundManager.Instance.PaintMultiClasses(weights);
+            BackgroundManager.Instance.PaintMulticlass(weights);
         }
 
         private void Update()
@@ -132,21 +125,20 @@ namespace MachineLearning.Algo
             float val;
             for (int i = 0; i < n; i++)
             {
-                val = input[i, 0] * weights[0, 0] + input[i, 1] * weights[1, 0] + weights[2, 0];
-                outputFound[i, 0] = Tanh(val);
-                val = input[i, 0] * weights[0, 1] + input[i, 1] * weights[1, 1] + weights[2, 1];
-                outputFound[i, 1] = Tanh(val);
-                val = input[i, 0] * weights[0, 2] + input[i, 1] * weights[1, 2] + weights[2, 2];
-                outputFound[i, 2] = Tanh(val);
-
-                if (outputFound[i, 0] > 0 && outputReal[i, 0] < 0
-                    || outputFound[i, 0] < 0 && outputReal[i, 0] > 0
-                    || outputFound[i, 1] > 0 && outputReal[i, 1] < 0
-                    || outputFound[i, 1] < 0 && outputReal[i, 1] > 0
-                    || outputFound[i, 2] > 0 && outputReal[i, 2] < 0
-                    || outputFound[i, 2] < 0 && outputReal[i, 2] > 0)
+                for (int d = 0; d < c; d++)
                 {
-                    misclassed.Add(i);
+                    val = input[i, 0] * weights[0, d] + input[i, 1] * weights[1, d] + weights[2, d];
+                    outputFound[i, d] = Tanh(val);
+                }
+
+                for (int d = 0; d < c; d++)
+                {
+                    if (outputFound[i, d] > 0 && outputReal[i, d] < 0
+                    || outputFound[i, d] < 0 && outputReal[i, d] > 0)
+                    {
+                        misclassed.Add(i);
+                        break;
+                    }
                 }
             }
 
@@ -168,22 +160,16 @@ namespace MachineLearning.Algo
             }
 
             int badOne = misclassed[Random.Range(0, misclassed.Count)];
-            float diff1 = outputReal[badOne, 0] - outputFound[badOne, 0];
-            float diff2 = outputReal[badOne, 1] - outputFound[badOne, 1];
-            float diff3 = outputReal[badOne, 2] - outputFound[badOne, 2];
 
-            weights[0, 0] += a * input[badOne, 0] * diff1;
-            weights[1, 0] += a * input[badOne, 1] * diff1;
-            weights[2, 0] += a * diff1;
+            for (int d = 0; d < c; d++)
+            {
+                float diff = outputReal[badOne, d] - outputFound[badOne, d];
 
-            weights[0, 1] += a * input[badOne, 0] * diff2;
-            weights[1, 1] += a * input[badOne, 1] * diff2;
-            weights[2, 1] += a * diff2;
-
-            weights[0, 2] += a * input[badOne, 0] * diff3;
-            weights[1, 2] += a * input[badOne, 1] * diff3;
-            weights[2, 2] += a * diff3;
-
+                weights[0, d] += a * input[badOne, 0] * diff;
+                weights[1, d] += a * input[badOne, 1] * diff;
+                weights[2, d] += a * diff;
+            }
+            
             ComputeMisclassifiedList();
 
             if (useSmallestError)
@@ -192,13 +178,13 @@ namespace MachineLearning.Algo
                 {
                     betterWeights = weights.Clone() as float[,];
                     smallestError = misclassed.Count;
-                    BackgroundManager.Instance.PaintMultiClasses(betterWeights);
+                    BackgroundManager.Instance.PaintMulticlass(betterWeights);
 
                 }
             }
             else
             {
-                BackgroundManager.Instance.PaintMultiClasses(weights);
+                BackgroundManager.Instance.PaintMulticlass(weights);
             }
         }
 
