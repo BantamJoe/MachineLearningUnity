@@ -23,15 +23,20 @@ namespace MachineLearning.Algo
         #endregion DllImport
 
         public float a = 0.001f;
+        bool isCreated = false;
 
         private void Start()
         {
             Init();
+            isCreated = true;
         }
-
-        private void OnDisable()
+        
+        private void OnDestroy()
         {
-            DestroyPerceptron();
+            if (isCreated)
+            {
+                DestroyPerceptron();
+            }
         }
 
         private void Init()
