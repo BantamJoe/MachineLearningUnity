@@ -28,7 +28,12 @@ namespace Scene
         }
 
         #region Button callbacks
-        
+
+        public void Quit()
+        {
+            Application.Quit();
+        }
+
         public void LoadScene(Transform self)
         {
             LoadScene(self.name);
