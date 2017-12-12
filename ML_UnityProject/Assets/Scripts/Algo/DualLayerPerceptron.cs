@@ -157,8 +157,8 @@ namespace MachineLearning.Algo
             // Last Layer
             float gradf = (1 - outputFound[badOne] * outputFound[badOne]) * (outputFound[badOne] - outputReal[badOne]);
 
-            float grad0 = (1 - miPut[badOne, 0] * miPut[badOne, 0]) * (weights[6]);
-            float grad1 = (1 - miPut[badOne, 1] * miPut[badOne, 1]) * (weights[7]);
+            float grad0 = (1 - miPut[badOne, 0] * miPut[badOne, 0]) * (weights[6]) * gradf;
+            float grad1 = (1 - miPut[badOne, 1] * miPut[badOne, 1]) * (weights[7]) * gradf;
 
             weights[0] -= a * input[badOne, 0] * grad0;
             weights[1] -= a * input[badOne, 1] * grad0;
@@ -201,7 +201,7 @@ namespace MachineLearning.Algo
 
             if (useSmallestError)
             {
-                if (misclassed.Count < smallestError)
+                if (misclassed.Count <= smallestError)
                 {
                     betterWeights = weights.Clone() as float[];
                     smallestError = misclassed.Count;

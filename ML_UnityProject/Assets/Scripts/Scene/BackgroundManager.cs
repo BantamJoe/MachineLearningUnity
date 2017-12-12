@@ -7,7 +7,7 @@ namespace MachineLearning.Scene
     {
         public static BackgroundManager Instance;
 
-        public delegate float GetOutPutDelegate(float[] input);
+        public delegate float GetOutPutDelegate(float[] input, bool useBest);
         public GetOutPutDelegate GetOutputFunc;
 
         public GameObject prefab;
@@ -102,13 +102,17 @@ namespace MachineLearning.Scene
             Entity current;
             float output;
 
+            float[] p = new float[2];
+
             for (int y = 0; y < sizeY; ++y)
             {
                 pos.x = startPos.x + offset.x;
+                p[1] = pos.y;
                 for (int x = 0; x < sizeX; ++x)
                 {
+                    p[0] = pos.x;
                     current = bgElements[y * (sizeX) + x];
-                    output = GetOutputFunc(new float[] { pos.x, pos.y });
+                    output = GetOutputFunc(p, true);
                     current.State = output == 0 ? 0 : output > 0 ? 2 : 1;
 
                     ++pos.x;

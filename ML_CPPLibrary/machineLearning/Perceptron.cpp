@@ -74,7 +74,7 @@ namespace MachineLearning
                 }
             }  
 
-            if (e < ebest)
+            if (e <= ebest)
             {
                 wbest = Eigen::VectorXf(w);
                 ebest = e;
