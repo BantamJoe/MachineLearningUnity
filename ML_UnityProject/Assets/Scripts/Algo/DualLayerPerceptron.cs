@@ -32,25 +32,29 @@ namespace MachineLearning.Algo
 
         List<int> misclassed;
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             if (smallestError <= 0)
             {
                 LogManager.Log("Error is already 0.");
-                return;
+                return 0;
             }
 
             Debug.Log("Running Perceptron.");
 
-            for (int i = 0; i < iterations; i++)
+            int i = 0;
+            for (; i < iterations; i++)
             {
                 GetBetter();
 
-                if (smallestError <= 0 || i == iterations - 1)
+                if (smallestError <= 0)
                 {
-                    LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+                    break;
                 }
             }
+
+            LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+            return smallestError;
         }
 
         private void Init()

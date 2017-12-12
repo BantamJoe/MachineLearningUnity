@@ -59,11 +59,12 @@ namespace MachineLearning.Algo
             PaintBackground();
         }
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             int errors = Run(iterations);
             LogManager.Log("Running " + iterations + " iterations. Errors = " + errors);
             PaintBackground();
+            return errors;
         }
 
         private void PaintBackground()

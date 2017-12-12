@@ -1198,12 +1198,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4604726342775558, guid: 6d10fac3a42296141b5c9ae02fe6a2e5,
     type: 2}
   m_PrefabInternal: {fileID: 1388430050}
---- !u!114 &1288644449 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114214539153025568, guid: 9d6d35c6b7215bd40b8deaad04a05621,
-    type: 2}
-  m_PrefabInternal: {fileID: 894891442}
-  m_Script: {fileID: 11500000, guid: a9dcbe64bc4083241bbffabd9aae1e78, type: 3}
 --- !u!1001 &1306191401
 Prefab:
   m_ObjectHideFlags: 0
@@ -1505,60 +1499,45 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 224337016476644894, guid: 33056dee6e3a74c49bcbcad25e676794,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -276.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224337016476644894, guid: 33056dee6e3a74c49bcbcad25e676794,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -259
+      objectReference: {fileID: 0}
+    - target: {fileID: 224183368096723918, guid: 33056dee6e3a74c49bcbcad25e676794,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -259
+      objectReference: {fileID: 0}
     - target: {fileID: 224113769223766026, guid: 33056dee6e3a74c49bcbcad25e676794,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 60
+      value: -156.5
       objectReference: {fileID: 0}
     - target: {fileID: 224113769223766026, guid: 33056dee6e3a74c49bcbcad25e676794,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -209
+      value: -229
       objectReference: {fileID: 0}
-    - target: {fileID: 224063493705797712, guid: 33056dee6e3a74c49bcbcad25e676794,
+    - target: {fileID: 224688478279743480, guid: 33056dee6e3a74c49bcbcad25e676794,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -276.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224688478279743480, guid: 33056dee6e3a74c49bcbcad25e676794,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: -229
       objectReference: {fileID: 0}
-    - target: {fileID: 114561309024533510, guid: 33056dee6e3a74c49bcbcad25e676794,
+    - target: {fileID: 224843096176622056, guid: 33056dee6e3a74c49bcbcad25e676794,
         type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1288644449}
-    - target: {fileID: 114561309024533510, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ChangePerceptron
-      objectReference: {fileID: 0}
-    - target: {fileID: 114171197174743754, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1288644449}
-    - target: {fileID: 114171197174743754, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RunPerceptron
-      objectReference: {fileID: 0}
-    - target: {fileID: 114094081848992738, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1288644449}
-    - target: {fileID: 114094081848992738, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RunPerceptron
-      objectReference: {fileID: 0}
-    - target: {fileID: 114927749865829200, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1288644449}
-    - target: {fileID: 114927749865829200, guid: 33056dee6e3a74c49bcbcad25e676794,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RunPerceptron
+      propertyPath: m_LocalPosition.x
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 33056dee6e3a74c49bcbcad25e676794, type: 2}

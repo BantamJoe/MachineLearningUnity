@@ -65,12 +65,12 @@ namespace MachineLearning.Algo
             BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
         }
 
-        public void RunPerceptron(int iterations)
+        public int RunPerceptron(int iterations)
         {
             if (smallestError <= 0)
             {
                 LogManager.Log("Error is already 0.");
-                return;
+                return 0;
             }
 
             Debug.Log("Running Perceptron.");
@@ -85,6 +85,7 @@ namespace MachineLearning.Algo
             }
             
             LogManager.Log("Ran perceptron for " + i + " iterations. Error = " + smallestError + ".");
+            return smallestError;
         }
 
         private void Update()
