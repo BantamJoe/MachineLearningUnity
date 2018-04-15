@@ -4,21 +4,31 @@ using MachineLearning.Scene;
 
 namespace MachineLearning.Algo
 {
+    public enum PerceptronType
+    {
+        Classification,
+        Regression
+    }
+
     /// <summary>
     /// Perceptron simple couche en C#.
     /// </summary>
     public class Perceptron : MonoBehaviour
     {
+        public PerceptronType perceptronType = PerceptronType.Classification;
+
         public bool auto;
         public bool useSmallestError;
 
         [Tooltip("Taux d'apprentissage")]
         public float a = 0.001f;
 
+        public float threshold = 0.01f;
+
         int n;
         int p = 2;
         float[,] input;
-        int[] outputReal;
+        float[] outputReal;
         float[] outputFound;
         float[] weights;
 
@@ -34,7 +44,7 @@ namespace MachineLearning.Algo
             n = entities.Length;
 
             input = new float[n, p];
-            outputReal = new int[n];
+            outputReal = new float[n];
             outputFound = new float[n];
             weights = new float[p + 1];
             betterWeigts = new float[p + 1];
@@ -45,7 +55,14 @@ namespace MachineLearning.Algo
                 pos = entities[i].transform.position;
                 input[i, 0] = pos.x;
                 input[i, 1] = pos.y;
-                outputReal[i] = entities[i].State == 2 ? 1 : -1;
+                if (perceptronType == PerceptronType.Classification)
+                {
+                    outputReal[i] = entities[i].State == 2 ? 1 : -1;
+                }
+                else if (perceptronType == PerceptronType.Regression)
+                {
+                    outputReal[i] = entities[i].Value;
+                }
             }
 
             weights[0] = Random.Range(-1f, 1f);
@@ -111,16 +128,33 @@ namespace MachineLearning.Algo
                     + input[i, 1] * weights[1] + weights[2];
 
                 //outputFound[i] = val == 0 ? -1 : val > 0 ? 1 : 0;
-                outputFound[i] = (float)System.Math.Tanh(val);
+                if (perceptronType == PerceptronType.Classification)
+                {
+                    outputFound[i] = (float)System.Math.Tanh(val);
+                }
+                else if (perceptronType == PerceptronType.Regression)
+                {
+                    outputFound[i] = Mathf.Clamp01(val);
+                }
 
                 //if (outputFound[i] != outputReal[i])
                 //{
                 //    misclassed.Add(i);
                 //}
-                if (outputFound[i] >= 0 && outputReal[i] <= 0 
-                    || outputFound[i] <= 0 && outputReal[i] >= 0)
+                if (perceptronType == PerceptronType.Classification)
                 {
-                    misclassed.Add(i);
+                    if (outputFound[i] >= 0 && outputReal[i] <= 0
+                        || outputFound[i] <= 0 && outputReal[i] >= 0)
+                    {
+                        misclassed.Add(i);
+                    }
+                }
+                else if (perceptronType == PerceptronType.Regression)
+                {
+                    if (Mathf.Abs(outputFound[i] - outputReal[i]) > threshold)
+                    {
+                        misclassed.Add(i);
+                    }
                 }
             }
 
@@ -156,11 +190,25 @@ namespace MachineLearning.Algo
                     weights.CopyTo(betterWeigts, 0);
                     smallestError = misclassed.Count;
                 }
-                BackgroundManager.Instance.Paint(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
+                if (perceptronType == PerceptronType.Classification)
+                {
+                    BackgroundManager.Instance.Paint(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
+                }
+                else if (perceptronType == PerceptronType.Regression)
+                {
+                    BackgroundManager.Instance.PaintRegression(betterWeigts[0], betterWeigts[1], betterWeigts[2]);
+                }
             }
             else
             {
-                BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
+                if (perceptronType == PerceptronType.Classification)
+                {
+                    BackgroundManager.Instance.Paint(weights[0], weights[1], weights[2]);
+                }
+                else if (perceptronType == PerceptronType.Regression)
+                {
+                    BackgroundManager.Instance.PaintRegression(weights[0], weights[1], weights[2]);
+                }
             }
         }
     }

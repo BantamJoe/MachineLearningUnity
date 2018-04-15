@@ -60,6 +60,29 @@ namespace MachineLearning.Scene
             }
         }
 
+        public void PaintRegression(float wx, float wy, float b)
+        {
+            Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);
+            Vector2 pos = startPos + (Vector2)offset;
+
+            Entity current;
+            float sum;
+
+            for (int y = 0; y < sizeY; ++y)
+            {
+                pos.x = startPos.x + offset.x;
+                for (int x = 0; x < sizeX; ++x)
+                {
+                    current = bgElements[y * (sizeX) + x];
+                    sum = pos.x * wx + pos.y * wy + b;
+                    current.Value = sum;
+
+                    ++pos.x;
+                }
+                ++pos.y;
+            }
+        }
+
         public void Paint2Layer(float[] weights)
         {
             Vector2 startPos = new Vector3(-sizeX / 2, -sizeY / 2);

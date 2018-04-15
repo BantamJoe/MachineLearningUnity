@@ -22,6 +22,15 @@ namespace MachineLearning.Scene
             }
         }
 
+        private float val = 0;
+        public float Value {
+            get { return val; }
+            set {
+                val = Mathf.Clamp01(value);
+                mat.color = new Color(val, 0, 1 - val);
+            }
+        }
+
         private void Awake()
         {
             mat = GetComponent<MeshRenderer>().material;
@@ -33,6 +42,7 @@ namespace MachineLearning.Scene
                     break;
                 }
             }
+            val = mat.color.r;
         }
     }
 }
